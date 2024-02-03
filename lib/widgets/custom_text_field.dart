@@ -15,19 +15,20 @@ class CustomTextFormField extends StatelessWidget {
         if (value!.isEmpty) {
           return 'Field is required';
         }
+        return null;
       },
       onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(
+        hintStyle: const TextStyle(
           color: Colors.white,
         ),
-        border: OutlineInputBorder(
+        border: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.white,
           ),
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.white,
           ),
