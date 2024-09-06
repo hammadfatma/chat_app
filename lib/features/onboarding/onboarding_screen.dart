@@ -1,5 +1,7 @@
-import 'package:chat_app/theming/colors.dart';
+import 'package:chat_app/core/theming/colors.dart';
+import 'package:chat_app/core/theming/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -7,35 +9,26 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsManager.black,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsetsDirectional.symmetric(horizontal: 50,vertical: 25),
+          padding:
+              EdgeInsetsDirectional.symmetric(horizontal: 50.w, vertical: 25.h),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 'Welcome to WhatsApp',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                  color: ColorsManager.white,
-                ),
+                style: TextStyles.font30WhiteBold,
               ),
               const Spacer(),
               Image.asset('assets/images/onboarding_image.png'),
               const Spacer(),
-              const Text(
-                'Read our Privacy Policy. Tap "Agree and Continue" to\n accept the Terms of Service.',
+              Text(
+                'Read our Privacy Policy. Tap "Agree and continue" to\n accept the Terms of Service.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 13,
-                  color: ColorsManager.ligtGray,
-                ),
+                style: TextStyles.font13LightGrayRegular,
               ),
-              const SizedBox(
-                height: 24,
+              SizedBox(
+                height: 24.h,
               ),
               TextButton(
                 onPressed: () {},
@@ -43,7 +36,7 @@ class OnboardingScreen extends StatelessWidget {
                   backgroundColor:
                       MaterialStateProperty.all(ColorsManager.ligtGreen),
                   minimumSize: MaterialStateProperty.all(
-                    const Size(double.infinity, 40),
+                    Size(double.infinity, 40.h),
                   ),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   shape: MaterialStateProperty.all(
@@ -52,13 +45,9 @@ class OnboardingScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   'AGREE AND CONTINUE',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: ColorsManager.black,
-                  ),
+                  style: TextStyles.font14BlackRegular,
                 ),
               ),
             ],

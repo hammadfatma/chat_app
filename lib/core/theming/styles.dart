@@ -1,0 +1,22 @@
+import 'package:chat_app/core/theming/colors.dart';
+import 'package:chat_app/core/theming/font_weight_helper.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class TextStyles {
+  static TextStyle font30WhiteBold = TextStyle(
+    fontWeight: FontWeightHelper.bold,
+    fontSize: 30.sp,
+    color: ColorsManager.white,
+  );
+  static TextStyle font13LightGrayRegular = TextStyle(
+    fontWeight: FontWeightHelper.regular,
+    fontSize: 13.sp,
+    color: ColorsManager.ligtGray,
+  );
+  static TextStyle font14BlackRegular = TextStyle(
+    fontWeight: FontWeightHelper.regular,
+    fontSize: 14.sp,
+    color: ColorsManager.black,
+  );
+}
