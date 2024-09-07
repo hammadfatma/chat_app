@@ -1,3 +1,6 @@
+import 'package:chat_app/core/helpers/extensions.dart';
+import 'package:chat_app/core/helpers/spacing.dart';
+import 'package:chat_app/core/routing/routes.dart';
 import 'package:chat_app/core/theming/colors.dart';
 import 'package:chat_app/core/theming/styles.dart';
 import 'package:flutter/material.dart';
@@ -27,11 +30,11 @@ class OnboardingScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyles.font13LightGrayRegular,
               ),
-              SizedBox(
-                height: 24.h,
-              ),
+              verticalSpace(24),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.pushNamed(Routes.loginScreen);
+                },
                 style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all(ColorsManager.ligtGreen),

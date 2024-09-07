@@ -1,4 +1,5 @@
 import 'package:chat_app/core/routing/routes.dart';
+import 'package:chat_app/features/auth/ui/login_screen.dart';
 import 'package:chat_app/features/onboarding/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,10 @@ class AppRouter {
       case Routes.onBoardingScreen:
         return MaterialPageRoute(
           builder: (_) => const OnboardingScreen(),
+        );
+      case Routes.loginScreen:
+        return MaterialPageRoute(
+          builder: (_) => const LoginScreen(),
         );
       default:
         return null;
