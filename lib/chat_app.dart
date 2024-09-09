@@ -1,6 +1,6 @@
 import 'package:chat_app/core/routing/app_router.dart';
-import 'package:chat_app/core/routing/routes.dart';
 import 'package:chat_app/core/theming/colors.dart';
+import 'package:chat_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,7 +22,7 @@ class ChatApp extends StatelessWidget {
           scaffoldBackgroundColor: ColorsManager.black,
           fontFamily: 'Roboto',
         ),
-        initialRoute: Routes.onBoardingScreen,
+        initialRoute: initialRoute,
         onGenerateRoute: appRouter.generateRoute,
       ),
     );
