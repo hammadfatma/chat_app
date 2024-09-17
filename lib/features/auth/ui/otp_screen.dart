@@ -3,10 +3,11 @@ import 'package:chat_app/core/helpers/spacing.dart';
 import 'package:chat_app/core/routing/routes.dart';
 import 'package:chat_app/core/theming/colors.dart';
 import 'package:chat_app/core/theming/styles.dart';
+import 'package:chat_app/core/widgets/show_toast.dart';
 import 'package:chat_app/features/auth/logic/phone_cubit/phone_auth_cubit.dart';
-import 'package:chat_app/features/auth/ui/widgets/auth_button.dart';
+import 'package:chat_app/core/widgets/next_button.dart';
 import 'package:chat_app/features/auth/ui/widgets/intro_texts.dart';
-import 'package:chat_app/features/auth/ui/widgets/progress_indicator.dart';
+import 'package:chat_app/core/widgets/progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -75,19 +76,13 @@ class _OtpScreenState extends State<OtpScreen> {
         if (state is PhoneOTPVerified) {
           Navigator.pop(context);
           context.pushNamedAndRemoveUntil(
-            Routes.homeScreen,
+            Routes.initialProfileScreen,
             predicate: (route) => false,
           );
         }
         if (state is PhoneAuthError) {
           String errorMsg = state.error;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(errorMsg),
-              backgroundColor: Colors.red,
-              duration: const Duration(seconds: 3),
-            ),
-          );
+          showToast(text: errorMsg, state: ToastStates.error);
         }
       },
       child: Container(),

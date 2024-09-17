@@ -9,7 +9,7 @@ Widget buildNextButton(
   required String text,
 }) {
   return Align(
-    alignment: Alignment.centerRight,
+    alignment: Alignment.center,
     child: ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(

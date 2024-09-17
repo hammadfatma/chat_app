@@ -3,10 +3,12 @@ import 'package:chat_app/core/helpers/spacing.dart';
 import 'package:chat_app/core/routing/routes.dart';
 import 'package:chat_app/core/theming/colors.dart';
 import 'package:chat_app/core/theming/styles.dart';
+import 'package:chat_app/core/widgets/show_toast.dart';
 import 'package:chat_app/features/auth/logic/phone_cubit/phone_auth_cubit.dart';
-import 'package:chat_app/features/auth/ui/widgets/auth_button.dart';
+import 'package:chat_app/core/widgets/next_button.dart';
 import 'package:chat_app/features/auth/ui/widgets/intro_texts.dart';
-import 'package:chat_app/features/auth/ui/widgets/progress_indicator.dart';
+import 'package:chat_app/core/widgets/progress_indicator.dart';
+import 'package:chat_app/features/auth/ui/widgets/text_form_field.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
   String contryName = '';
   String contryFlag = '';
   String contryCode = '';
-
   Widget _buildPhoneFormField() {
     return Column(
       children: [
@@ -85,38 +86,19 @@ class _LoginScreenState extends State<LoginScreen> {
             horizontalSpace(16),
             Expanded(
               flex: 2,
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: ColorsManager.ligtGreen),
-                    top: BorderSide.none,
-                    right: BorderSide.none,
-                    left: BorderSide.none,
-                  ),
-                ),
-                child: TextFormField(
-                  scrollPadding: EdgeInsets.zero,
-                  style: TextStyles.font14BlackRegular.copyWith(
-                    letterSpacing: 2.0,
-                    color: ColorsManager.white,
-                  ),
-                  decoration: const InputDecoration(border: InputBorder.none),
-                  cursorColor: ColorsManager.ligtGreen,
-                  keyboardType: TextInputType.phone,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter yout phone number!';
-                    } else if (value.length < 11) {
-                      return 'Too short for a phone number!';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    phoneNumber = value!;
-                  },
-                ),
+              child: showTextFormField(
+                keyboardType: TextInputType.phone,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter your phone number!';
+                  } else if (value.length < 11) {
+                    return 'Too short for a phone number!';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  phoneNumber = value!;
+                },
               ),
             ),
           ],
@@ -188,13 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (state is PhoneAuthError) {
           Navigator.pop(context);
           String errorMsg = state.error;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(errorMsg),
-              backgroundColor: Colors.red,
-              duration: const Duration(seconds: 3),
-            ),
-          );
+          showToast(text: errorMsg, state: ToastStates.error);
         }
       },
       child: Container(),
@@ -216,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   buildIntroTexts(
                     firstText: 'What is your phone number?',
                     secondText:
-                        'Please enter yout phone number to verify your account.',
+                        'Please enter your phone number to verify your account.',
                   ),
                   verticalSpace(25),
                   _buildPhoneFormField(),

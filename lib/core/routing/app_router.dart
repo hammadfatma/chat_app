@@ -4,6 +4,8 @@ import 'package:chat_app/features/auth/ui/login_screen.dart';
 import 'package:chat_app/features/auth/ui/otp_screen.dart';
 import 'package:chat_app/features/home/home_screen.dart';
 import 'package:chat_app/features/onboarding/onboarding_screen.dart';
+import 'package:chat_app/features/profile/logic/cubit/profile_cubit.dart';
+import 'package:chat_app/features/profile/ui/initial_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,6 +40,13 @@ class AppRouter {
             child: OtpScreen(
               phoneNumber: argument as String,
             ),
+          ),
+        );
+      case Routes.initialProfileScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => ProfileCubit(),
+            child: const InitialProfileScreen(),
           ),
         );
       default:

@@ -1,7 +1,7 @@
 import 'package:chat_app/core/helpers/extensions.dart';
 import 'package:chat_app/core/routing/routes.dart';
 import 'package:chat_app/features/auth/logic/phone_cubit/phone_auth_cubit.dart';
-import 'package:chat_app/features/auth/ui/widgets/auth_button.dart';
+import 'package:chat_app/core/widgets/next_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
