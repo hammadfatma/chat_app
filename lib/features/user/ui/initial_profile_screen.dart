@@ -6,8 +6,8 @@ import 'package:chat_app/core/widgets/show_toast.dart';
 import 'package:chat_app/features/auth/ui/widgets/intro_texts.dart';
 import 'package:chat_app/core/widgets/progress_indicator.dart';
 import 'package:chat_app/features/auth/ui/widgets/text_form_field.dart';
-import 'package:chat_app/features/profile/logic/cubit/profile_cubit.dart';
-import 'package:chat_app/features/profile/ui/widgets/profile_image.dart';
+import 'package:chat_app/features/user/logic/cubit/user_cubit.dart';
+import 'package:chat_app/features/user/ui/widgets/profile_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,26 +54,29 @@ class _InitialProfileScreenState extends State<InitialProfileScreen> {
       await FirebaseAuth.instance.currentUser!
           .updateDisplayName(name)
           .then((value) async {
-        await BlocProvider.of<ProfileCubit>(context).createUser();
+        await BlocProvider.of<UserCubit>(context).createUser();
       });
     }
   }
 
   Widget _buildProfileCreatedBloc() {
-    return BlocListener<ProfileCubit, ProfileState>(
+    return BlocListener<UserCubit, UserState>(
       listenWhen: (previous, current) {
         return previous != current;
       },
       listener: (context, state) {
-        if (state is ProfileCreateUserLoadingState) {
+        if (state is ProfileCreateLoadingState) {
           showProgressIndicator(context);
         }
-        if (state is ProfileCreateUserSuccessState) {
+        if (state is ProfileCreateSuccessState) {
           Navigator.pop(context);
-          context.pushNamed(Routes.homeScreen);
+          context.pushNamedAndRemoveUntil(
+            Routes.homeScreen,
+            predicate: (route) => false,
+          );
           showToast(text: 'User Created', state: ToastStates.success);
         }
-        if (state is ProfileCreateUserErrorState) {
+        if (state is ProfileCreateErrorState) {
           Navigator.pop(context);
           showToast(text: 'No User Created', state: ToastStates.error);
         }

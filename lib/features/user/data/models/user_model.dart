@@ -8,6 +8,7 @@ class ChatUser {
   String? lastActivated;
   String? puchToken;
   bool? online;
+  List? myUsers;
   ChatUser({
     required this.id,
     required this.name,
@@ -18,6 +19,7 @@ class ChatUser {
     required this.lastActivated,
     required this.puchToken,
     required this.online,
+    required this.myUsers,
   });
   factory ChatUser.fromJson(Map<String, dynamic> json) {
     return ChatUser(
@@ -30,6 +32,7 @@ class ChatUser {
       lastActivated: json['last_activated'],
       puchToken: json['puch_token'],
       online: json['online'],
+      myUsers: json['my_users'],
     );
   }
   Map<String, dynamic> toJson() {
@@ -43,6 +46,7 @@ class ChatUser {
       'last_activated': lastActivated,
       'puch_token': puchToken,
       'online': online,
+      'my_users': myUsers,
     };
   }
 }

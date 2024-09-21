@@ -1,5 +1,5 @@
 import 'package:chat_app/core/theming/colors.dart';
-import 'package:chat_app/features/profile/logic/cubit/profile_cubit.dart';
+import 'package:chat_app/features/user/logic/cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,7 +45,7 @@ Widget buildProfileImage(context, bcontext) {
                         title: const Text('Camera'),
                         onTap: () {
                           Navigator.pop(context);
-                          BlocProvider.of<ProfileCubit>(bcontext)
+                          BlocProvider.of<UserCubit>(bcontext)
                               .getProfileImage(ImageSource.camera);
                         },
                       ),
@@ -54,7 +54,7 @@ Widget buildProfileImage(context, bcontext) {
                         title: const Text('Gallery'),
                         onTap: () {
                           Navigator.pop(context);
-                          BlocProvider.of<ProfileCubit>(bcontext)
+                          BlocProvider.of<UserCubit>(bcontext)
                               .getProfileImage(ImageSource.gallery);
                         },
                       ),

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_app/core/widgets/show_toast.dart';
-import 'package:chat_app/features/profile/data/models/user_model.dart';
+import 'package:chat_app/features/user/data/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
-part 'profile_state.dart';
+part 'user_state.dart';
 
-class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit() : super(ProfileInitial());
+class UserCubit extends Cubit<UserState> {
+  UserCubit() : super(UserInitial());
   String? imageUrl;
   Future<void> getProfileImage(ImageSource imageSource) async {
     var file = await ImagePicker().pickImage(source: imageSource);
@@ -32,11 +32,10 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  // FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   User user = FirebaseAuth.instance.currentUser!;
   Future<void> createUser() async {
-    emit(ProfileCreateUserLoadingState());
+    emit(ProfileCreateLoadingState());
     ChatUser chatUser = ChatUser(
       id: user.uid,
       name: user.displayName ?? "",
@@ -48,15 +47,35 @@ class ProfileCubit extends Cubit<ProfileState> {
       lastActivated: DateTime.now().toString(),
       puchToken: '',
       online: false,
+      myUsers: [],
     );
     try {
       await firebaseFirestore
           .collection('users')
           .doc(user.uid)
           .set(chatUser.toJson());
-      emit(ProfileCreateUserSuccessState());
+      emit(ProfileCreateSuccessState());
     } catch (error) {
-      emit(ProfileCreateUserErrorState());
+      emit(ProfileCreateErrorState());
+    }
+  }
+
+  Future<void> addContact({required String phone}) async {
+    emit(ContactCreateLoadingState());
+    QuerySnapshot userPhone = await firebaseFirestore
+        .collection('users')
+        .where('phone', isEqualTo: phone)
+        .get();
+    if (userPhone.docs.isNotEmpty) {
+      String userId = userPhone.docs.first.id;
+      firebaseFirestore.collection('users').doc(user.uid).update({
+        'my_users': FieldValue.arrayUnion([userId])
+      });
+      showToast(text: 'contact added', state: ToastStates.success);
+      emit(ContactCreateSuccessState());
+    }else{
+      showToast(text: 'no found user has this phone number', state: ToastStates.error);
+      emit(ContactCreateErrorState());
     }
   }
 }
