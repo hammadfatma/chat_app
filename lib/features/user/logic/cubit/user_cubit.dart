@@ -43,8 +43,8 @@ class UserCubit extends Cubit<UserState> {
       about: 'Hey there! I am using WhatsApp.',
       image: imageUrl ??
           'https://firebasestorage.googleapis.com/v0/b/chat-app-95f3c.appspot.com/o/profile%2Fprofile_image.png?alt=media&token=98017798-3968-43b5-9124-0eb5b3e747bc',
-      createdAt: DateTime.now().toString(),
-      lastActivated: DateTime.now().toString(),
+      createdAt: DateTime.now().millisecondsSinceEpoch.toString(),
+      lastActivated: DateTime.now().millisecondsSinceEpoch.toString(),
       puchToken: '',
       online: false,
       myUsers: [],
@@ -73,8 +73,10 @@ class UserCubit extends Cubit<UserState> {
       });
       showToast(text: 'contact added', state: ToastStates.success);
       emit(ContactCreateSuccessState());
-    }else{
-      showToast(text: 'no found user has this phone number', state: ToastStates.error);
+    } else {
+      showToast(
+          text: 'no found user has this phone number',
+          state: ToastStates.error);
       emit(ContactCreateErrorState());
     }
   }

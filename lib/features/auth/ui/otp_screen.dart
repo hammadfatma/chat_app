@@ -8,6 +8,8 @@ import 'package:chat_app/features/auth/logic/phone_cubit/phone_auth_cubit.dart';
 import 'package:chat_app/core/widgets/next_button.dart';
 import 'package:chat_app/features/auth/ui/widgets/intro_texts.dart';
 import 'package:chat_app/core/widgets/progress_indicator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -64,6 +66,24 @@ class _OtpScreenState extends State<OtpScreen> {
     BlocProvider.of<PhoneAuthCubit>(context).submitOTP(otpCode);
   }
 
+  void _checkUserFound(BuildContext context) async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .get();
+    if (!userDoc.exists) {
+      context.pushNamedAndRemoveUntil(
+        Routes.initialProfileScreen,
+        predicate: (route) => false,
+      );
+    } else {
+      context.pushNamedAndRemoveUntil(
+        Routes.homeScreen,
+        predicate: (route) => false,
+      );
+    }
+  }
+
   Widget _buildPhoneVerificationBloc() {
     return BlocListener<PhoneAuthCubit, PhoneAuthState>(
       listenWhen: (previous, current) {
@@ -75,10 +95,8 @@ class _OtpScreenState extends State<OtpScreen> {
         }
         if (state is PhoneOTPVerified) {
           Navigator.pop(context);
-          context.pushNamedAndRemoveUntil(
-            Routes.initialProfileScreen,
-            predicate: (route) => false,
-          );
+
+          _checkUserFound(context);
         }
         if (state is PhoneAuthError) {
           String errorMsg = state.error;

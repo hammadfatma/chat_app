@@ -1,15 +1,14 @@
-import 'package:chat_app/core/helpers/extensions.dart';
 import 'package:chat_app/core/helpers/spacing.dart';
 import 'package:chat_app/core/theming/colors.dart';
 import 'package:chat_app/core/theming/font_weight_helper.dart';
 import 'package:chat_app/core/theming/styles.dart';
 import 'package:chat_app/core/widgets/progress_indicator.dart';
-import 'package:chat_app/features/auth/ui/widgets/text_form_field.dart';
 import 'package:chat_app/features/chat/ui/widgets/no_item_found.dart';
 import 'package:chat_app/features/home/widgets/floating_action.dart';
 import 'package:chat_app/features/user/data/models/user_model.dart';
 import 'package:chat_app/features/user/logic/cubit/user_cubit.dart';
 import 'package:chat_app/features/user/ui/widgets/contact_item.dart';
+import 'package:chat_app/features/user/ui/widgets/show_bottom_sheet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -106,78 +105,28 @@ class _ContactsScreenState extends State<ContactsScreen> {
         ),
         floatingActionButton: buildfloatingActionButton(
           onPressed: () {
-            showModalBottomSheet(
-              backgroundColor: ColorsManager.ligtGray,
-              isScrollControlled: true,
+            provideBottomSheet(
               context: context,
-              builder: (context) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    child: Form(
-                      key: _phoneFormKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Enter Friend Phone",
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
-                              const Spacer(),
-                              IconButton.filled(
-                                onPressed: () {
-                                  context.pop();
-                                },
-                                icon: const Icon(Icons.close),
-                              )
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: showTextFormField(
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter phone number!';
-                                } else if (!value.contains('+2')) {
-                                  return 'Please enter (+2) valid phone number!';
-                                } else if (value.length != 13) {
-                                  return 'It is not equal to the number of phone numbers!';
-                                }
-                                return null;
-                              },
-                              keyboardType: TextInputType.phone,
-                              onSaved: (value) {
-                                phoneNumber = value!;
-                              },
-                            ),
-                          ),
-                          verticalSpace(16),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.all(16),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                backgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer),
-                            onPressed: () {
-                              showProgressIndicator(context);
-                              _add(context, bcontext);
-                            },
-                            child: const Center(
-                              child: Text("Add Contact"),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+              onPressed: () {
+                showProgressIndicator(context);
+                _add(context, bcontext);
+              },
+              key: _phoneFormKey,
+              hintText: "Enter Friend Phone",
+              buttonText: 'Add Contact',
+              keyboardType: TextInputType.phone,
+              onSaved: (value) {
+                phoneNumber = value!;
+              },
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter phone number!';
+                } else if (!value.contains('+2')) {
+                  return 'Please enter (+2) valid phone number!';
+                } else if (value.length != 13) {
+                  return 'It is not equal to the number of phone numbers!';
+                }
+                return null;
               },
             );
           },
