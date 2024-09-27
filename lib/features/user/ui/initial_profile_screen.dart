@@ -12,6 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 
 class InitialProfileScreen extends StatefulWidget {
   const InitialProfileScreen({super.key});
@@ -26,7 +27,19 @@ class _InitialProfileScreenState extends State<InitialProfileScreen> {
   Widget _buildNameFormField(bcontext) {
     return Column(
       children: [
-        buildProfileImage(context, bcontext),
+        pickImage(
+          context: context,
+          onTapCamera: () {
+            context.pop();
+            BlocProvider.of<UserCubit>(bcontext)
+                .getProfileImage(ImageSource.camera);
+          },
+          onTapGallary: () {
+            context.pop();
+            BlocProvider.of<UserCubit>(bcontext)
+                .getProfileImage(ImageSource.gallery);
+          },
+        ),
         verticalSpace(16),
         showTextFormField(
           keyboardType: TextInputType.name,

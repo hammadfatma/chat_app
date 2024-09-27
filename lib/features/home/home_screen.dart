@@ -4,9 +4,9 @@ import 'package:chat_app/core/theming/colors.dart';
 import 'package:chat_app/core/theming/font_weight_helper.dart';
 import 'package:chat_app/core/theming/styles.dart';
 import 'package:chat_app/features/auth/logic/phone_cubit/phone_auth_cubit.dart';
-import 'package:chat_app/features/chat/ui/chats_screen.dart';
-import 'package:chat_app/features/chat/ui/calls_screen.dart';
-import 'package:chat_app/features/chat/ui/status_screen.dart';
+import 'package:chat_app/features/home/chats_screen.dart';
+import 'package:chat_app/features/home/calls_screen.dart';
+import 'package:chat_app/features/home/status_screen.dart';
 import 'package:chat_app/features/home/widgets/floating_action.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -101,7 +101,9 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                context.pushNamed(Routes.groupsScreen);
+              },
               icon: const Icon(
                 Icons.groups,
                 size: 20,

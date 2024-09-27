@@ -4,6 +4,13 @@ import 'package:chat_app/features/auth/ui/login_screen.dart';
 import 'package:chat_app/features/auth/ui/otp_screen.dart';
 import 'package:chat_app/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:chat_app/features/chat/ui/single_chat_screen.dart';
+import 'package:chat_app/features/group/data/models/group_model.dart';
+import 'package:chat_app/features/group/logic/cubit/group_cubit.dart';
+import 'package:chat_app/features/group/ui/create_group.dart';
+import 'package:chat_app/features/group/ui/edit_group.dart';
+import 'package:chat_app/features/group/ui/group_members.dart';
+import 'package:chat_app/features/group/ui/groups_screen.dart';
+import 'package:chat_app/features/group/ui/single_group_screen.dart';
 import 'package:chat_app/features/home/home_screen.dart';
 import 'package:chat_app/features/onboarding/onboarding_screen.dart';
 import 'package:chat_app/features/user/logic/cubit/user_cubit.dart';
@@ -68,6 +75,44 @@ class AppRouter {
                 SingleChatScreen(roomId: args.roomId, chatUser: args.chatUser),
           );
         });
+      case Routes.groupsScreen:
+        return MaterialPageRoute(
+          builder: (_) => const GroupsScreen(),
+        );
+      case Routes.groupMembersScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => GroupCubit(),
+            child: GroupMembersScreen(
+              chatGroup: argument as ChatGroup,
+            ),
+          ),
+        );
+      case Routes.createGroupScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => GroupCubit(),
+            child: const CreateGroupScreen(),
+          ),
+        );
+      case Routes.editGroupScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => GroupCubit(),
+            child: EditGroupScreen(
+              chatGroup: argument as ChatGroup,
+            ),
+          ),
+        );
+      case Routes.singleGroupScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => GroupCubit(),
+            child: SingleGroupScreen(
+              chatGroup: argument as ChatGroup,
+            ),
+          ),
+        );
       default:
         return null;
     }

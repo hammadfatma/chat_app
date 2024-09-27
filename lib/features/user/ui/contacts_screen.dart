@@ -8,6 +8,7 @@ import 'package:chat_app/features/home/widgets/floating_action.dart';
 import 'package:chat_app/features/user/data/models/user_model.dart';
 import 'package:chat_app/features/user/logic/cubit/user_cubit.dart';
 import 'package:chat_app/features/user/ui/widgets/contact_item.dart';
+import 'package:chat_app/features/user/ui/widgets/custom_text_field.dart';
 import 'package:chat_app/features/user/ui/widgets/show_bottom_sheet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -44,35 +45,37 @@ class _ContactsScreenState extends State<ContactsScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: searched
               ? Row(
                   children: [
                     Expanded(
-                      child: TextField(
+                      child: CustomTextField(
+                        hintText: 'Search by name',
                         onChanged: (value) {
                           setState(() {
                             searchController.text = value;
                           });
                         },
-                        style: TextStyles.font12WhiteSemiBold,
-                        autofocus: true,
                         controller: searchController,
-                        decoration: InputDecoration(
-                          hintText: "Search by name",
-                          hintStyle: TextStyles.font13LightGrayRegular,
-                          border: InputBorder.none,
-                        ),
                       ),
                     ),
                   ],
                 )
-              : Text(
-                  'Contacts',
-                  style: TextStyles.font20WhiteMedium
-                      .copyWith(fontWeight: FontWeightHelper.semiBold),
+              : Column(
+                  children: [
+                    Text(
+                      'Contacts',
+                      style: TextStyles.font20WhiteMedium
+                          .copyWith(fontWeight: FontWeightHelper.semiBold),
+                    ),
+                    // Text(
+                    //   '${myContacts.length} contacts',
+                    //   style: TextStyles.font12WhiteSemiBold
+                    //       .copyWith(fontWeight: FontWeightHelper.bold),
+                    // ),
+                  ],
                 ),
           actions: [
             searched

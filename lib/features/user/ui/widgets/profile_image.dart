@@ -1,11 +1,12 @@
 import 'package:chat_app/core/theming/colors.dart';
-import 'package:chat_app/features/user/logic/cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
 
-Widget buildProfileImage(context, bcontext) {
+Widget pickImage({
+  required BuildContext context,
+  required void Function()? onTapCamera,
+  required void Function()? onTapGallary,
+}) {
   return Stack(
     clipBehavior: Clip.none,
     children: [
@@ -43,20 +44,12 @@ Widget buildProfileImage(context, bcontext) {
                       ListTile(
                         leading: const Icon(Icons.camera),
                         title: const Text('Camera'),
-                        onTap: () {
-                          Navigator.pop(context);
-                          BlocProvider.of<UserCubit>(bcontext)
-                              .getProfileImage(ImageSource.camera);
-                        },
+                        onTap: onTapCamera,
                       ),
                       ListTile(
                         leading: const Icon(Icons.image),
                         title: const Text('Gallery'),
-                        onTap: () {
-                          Navigator.pop(context);
-                          BlocProvider.of<UserCubit>(bcontext)
-                              .getProfileImage(ImageSource.gallery);
-                        },
+                        onTap: onTapGallary,
                       ),
                     ],
                   ),
