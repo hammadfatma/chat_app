@@ -9,7 +9,6 @@ import 'package:chat_app/features/home/calls_screen.dart';
 import 'package:chat_app/features/home/status_screen.dart';
 import 'package:chat_app/features/home/widgets/floating_action.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -45,7 +44,30 @@ class _HomeScreenState extends State<HomeScreen>
     switch (_tabController.index) {
       case 0:
         return buildfloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text(
+                  'If you want to chat with person, you should add him as contact and send hello message to him',
+                ),
+                actions: [
+                  ListTile(
+                    leading: const Icon(
+                      Icons.contact_page,
+                      size: 20,
+                      color: ColorsManager.gray,
+                    ),
+                    title: const Text('Contacts'),
+                    onTap: () {
+                      context.pop();
+                      context.pushNamed(Routes.contactsScreen);
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
           icon: Icons.chat,
         );
       case 1:
@@ -78,26 +100,12 @@ class _HomeScreenState extends State<HomeScreen>
           actions: [
             IconButton(
               onPressed: () {
-                context.pushNamed(Routes.contactsScreen);
+                context.pushNamed(Routes.profileScreen);
               },
               icon: const Icon(
-                Icons.contact_page,
+                Icons.person,
                 size: 20,
                 color: ColorsManager.white,
-              ),
-            ),
-            BlocProvider<PhoneAuthCubit>(
-              create: (context) => phoneAuthCubit,
-              child: IconButton(
-                onPressed: () async {
-                  await phoneAuthCubit.logOut();
-                  context.pushReplacementNamed(Routes.loginScreen);
-                },
-                icon: const Icon(
-                  Icons.person,
-                  size: 20,
-                  color: ColorsManager.white,
-                ),
               ),
             ),
             IconButton(

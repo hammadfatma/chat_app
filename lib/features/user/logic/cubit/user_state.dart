@@ -15,6 +15,12 @@ class ProfileCreateSuccessState extends UserState {}
 
 class ProfileCreateErrorState extends UserState {}
 
+class ProfileImageEditSuccessState extends UserState {}
+
+class ProfileNameEditSuccessState extends UserState {}
+
+class ProfileAboutEditSuccessState extends UserState {}
+
 class ContactCreateLoadingState extends UserState {}
 
 class ContactCreateSuccessState extends UserState {}

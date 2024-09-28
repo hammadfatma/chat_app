@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget pickImage({
+  String? image,
   required BuildContext context,
   required void Function()? onTapCamera,
   required void Function()? onTapGallary,
@@ -12,7 +13,8 @@ Widget pickImage({
     children: [
       ClipOval(
         child: Image.network(
-          'https://firebasestorage.googleapis.com/v0/b/chat-app-95f3c.appspot.com/o/profile%2Fprofile_image.png?alt=media&token=98017798-3968-43b5-9124-0eb5b3e747bc',
+          image ??
+              'https://firebasestorage.googleapis.com/v0/b/chat-app-95f3c.appspot.com/o/profile%2Fprofile_image.png?alt=media&token=98017798-3968-43b5-9124-0eb5b3e747bc',
           fit: BoxFit.cover,
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;

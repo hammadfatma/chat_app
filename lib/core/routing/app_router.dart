@@ -16,6 +16,7 @@ import 'package:chat_app/features/onboarding/onboarding_screen.dart';
 import 'package:chat_app/features/user/logic/cubit/user_cubit.dart';
 import 'package:chat_app/features/user/ui/contacts_screen.dart';
 import 'package:chat_app/features/user/ui/initial_profile_screen.dart';
+import 'package:chat_app/features/user/ui/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -57,6 +58,13 @@ class AppRouter {
           builder: (_) => BlocProvider(
             create: (context) => UserCubit(),
             child: const InitialProfileScreen(),
+          ),
+        );
+      case Routes.profileScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => UserCubit(),
+            child: const ProfileScreen(),
           ),
         );
       case Routes.contactsScreen:

@@ -60,6 +60,30 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
+  Future<void> editImageProfile() async {
+    DocumentSnapshot document =
+        await firebaseFirestore.collection('users').doc(user.uid).get();
+    String imageValue = document.get('image');
+    await firebaseFirestore.collection('users').doc(user.uid).update({
+      'image': imageUrl ?? imageValue,
+    });
+    emit(ProfileImageEditSuccessState());
+  }
+
+  Future<void> editNameProfile({required String name}) async {
+    await firebaseFirestore.collection('users').doc(user.uid).update({
+      'name': name,
+    });
+    emit(ProfileNameEditSuccessState());
+  }
+
+  Future<void> editAboutProfile({required String about}) async {
+    await firebaseFirestore.collection('users').doc(user.uid).update({
+      'about': about,
+    });
+    emit(ProfileAboutEditSuccessState());
+  }
+
   Future<void> addContact({required String phone}) async {
     emit(ContactCreateLoadingState());
     QuerySnapshot userPhone = await firebaseFirestore
