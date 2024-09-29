@@ -26,3 +26,5 @@ class ContactCreateLoadingState extends UserState {}
 class ContactCreateSuccessState extends UserState {}
 
 class ContactCreateErrorState extends UserState {}
+
+class UserUpdatedActivatedState extends UserState {}

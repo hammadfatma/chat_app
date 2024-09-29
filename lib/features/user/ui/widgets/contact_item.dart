@@ -25,7 +25,7 @@ class ContactItem extends StatelessWidget {
               SingleChatScreen(roomId: members.toString(), chatUser: user),
         );
       },
-      leading: circleImage(image: user.image!),
+      leading: CircleImage(image: user.image!),
       title: Text(
         user.name!,
         style: TextStyles.font30WhiteBold.copyWith(fontSize: 14.sp),

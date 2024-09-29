@@ -2,6 +2,7 @@ import 'package:chat_app/core/helpers/extensions.dart';
 import 'package:chat_app/core/routing/routes.dart';
 import 'package:chat_app/core/theming/colors.dart';
 import 'package:chat_app/core/theming/styles.dart';
+import 'package:chat_app/core/widgets/date_time.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
 import 'package:chat_app/features/chat/ui/widgets/circle_image.dart';
 import 'package:chat_app/features/group/data/models/group_model.dart';
@@ -23,7 +24,7 @@ class GroupItem extends StatelessWidget {
           arguments: item,
         );
       },
-      leading: circleImage(image: item.image!),
+      leading: CircleImage(image: item.image!),
       title: Text(
         item.name!,
         style: TextStyles.font30WhiteBold.copyWith(fontSize: 14.sp),
@@ -119,10 +120,7 @@ class GroupItem extends StatelessWidget {
               );
             } else {
               return Text(
-                DateFormat.Hm()
-                    .format(DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(item.lastMessageTime!)))
-                    .toString(),
+                MyDateTime.timeDate(item.lastMessageTime!),
                 style: TextStyles.font13LightGrayRegular,
               );
             }

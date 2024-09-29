@@ -2,6 +2,7 @@ import 'package:chat_app/core/helpers/extensions.dart';
 import 'package:chat_app/core/routing/routes.dart';
 import 'package:chat_app/core/theming/colors.dart';
 import 'package:chat_app/core/theming/styles.dart';
+import 'package:chat_app/core/widgets/date_time.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
 import 'package:chat_app/features/chat/data/models/room_model.dart';
 import 'package:chat_app/features/chat/ui/single_chat_screen.dart';
@@ -11,7 +12,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 
 class ChatItem extends StatelessWidget {
   const ChatItem({super.key, required this.item});
@@ -39,7 +39,7 @@ class ChatItem extends StatelessWidget {
                     SingleChatScreen(roomId: item.id!, chatUser: chatUser),
               );
             },
-            leading: circleImage(image: chatUser.image!),
+            leading: CircleImage(image: chatUser.image!),
             title: Text(
               chatUser.name ?? chatUser.phone!,
               style: TextStyles.font30WhiteBold.copyWith(fontSize: 14.sp),
@@ -105,10 +105,7 @@ class ChatItem extends StatelessWidget {
                     return Column(
                       children: [
                         Text(
-                          DateFormat.Hm()
-                              .format(DateTime.fromMillisecondsSinceEpoch(
-                                  int.parse(item.lastMessageTime!)))
-                              .toString(),
+                          MyDateTime.timeDate(item.lastMessageTime!),
                           style: TextStyles.font13LightGrayRegular
                               .copyWith(color: ColorsManager.ligtGreen),
                         ),
@@ -129,10 +126,7 @@ class ChatItem extends StatelessWidget {
                     );
                   } else {
                     return Text(
-                      DateFormat.Hm()
-                          .format(DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(item.lastMessageTime!)))
-                          .toString(),
+                      MyDateTime.timeDate(item.lastMessageTime!),
                       style: TextStyles.font13LightGrayRegular,
                     );
                   }

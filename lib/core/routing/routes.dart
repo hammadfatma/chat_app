@@ -7,6 +7,7 @@ class Routes {
   static const String contactsScreen = '/contactsScreen';
   static const String homeScreen = '/homeScreen';
   static const String singleChatScreen = '/singleChatScreen';
+  static const String photoViewScreen = '/photoViewScreen';
   static const String singleGroupScreen = '/singleGroupScreen';
   static const String groupsScreen = '/groupsScreen';
   static const String groupMembersScreen = '/groupMembersScreen';

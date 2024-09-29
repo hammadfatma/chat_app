@@ -1,6 +1,9 @@
+import 'package:chat_app/core/helpers/extensions.dart';
 import 'package:chat_app/core/helpers/spacing.dart';
+import 'package:chat_app/core/routing/routes.dart';
 import 'package:chat_app/core/theming/colors.dart';
 import 'package:chat_app/core/theming/styles.dart';
+import 'package:chat_app/core/widgets/date_time.dart';
 import 'package:chat_app/core/widgets/progress_indicator.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
 import 'package:chat_app/features/group/logic/cubit/group_cubit.dart';
@@ -10,7 +13,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 
 class GroupMessageItem extends StatefulWidget {
   const GroupMessageItem({
@@ -46,8 +48,7 @@ class _GroupMessageItemState extends State<GroupMessageItem> {
   @override
   void initState() {
     super.initState();
-    if (widget.messageItem.senderId !=
-        FirebaseAuth.instance.currentUser!.uid) {
+    if (widget.messageItem.senderId != FirebaseAuth.instance.currentUser!.uid) {
       BlocProvider.of<GroupCubit>(context)
           .readMessage(gropId: widget.groupId, msgId: widget.messageItem.id!);
     }
@@ -56,17 +57,25 @@ class _GroupMessageItemState extends State<GroupMessageItem> {
   Widget _messageType() {
     switch (widget.messageItem.type) {
       case 'image':
-        return Image.network(
-          widget.messageItem.msg!,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return const Center(
-              child: CircularProgressIndicator(
-                color: ColorsManager.white,
-              ),
+        return GestureDetector(
+          onTap: () {
+            context.pushNamed(
+              Routes.photoViewScreen,
+              arguments: widget.messageItem.msg,
             );
           },
+          child: Image.network(
+            widget.messageItem.msg!,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: ColorsManager.white,
+                ),
+              );
+            },
+          ),
         );
       case 'text':
         return Text(
@@ -177,12 +186,8 @@ class _GroupMessageItemState extends State<GroupMessageItem> {
                                       : const SizedBox(),
                                   horizontalSpace(6),
                                   Text(
-                                    DateFormat.Hm()
-                                        .format(
-                                            DateTime.fromMillisecondsSinceEpoch(
-                                                int.parse(widget
-                                                    .messageItem.createdAt!)))
-                                        .toString(),
+                                    MyDateTime.timeDate(
+                                        widget.messageItem.createdAt!),
                                     style: TextStyles.font13LightGrayRegular,
                                   ),
                                 ],

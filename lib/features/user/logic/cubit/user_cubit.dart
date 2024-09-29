@@ -104,4 +104,12 @@ class UserCubit extends Cubit<UserState> {
       emit(ContactCreateErrorState());
     }
   }
+
+  Future<void> updateActivate({required bool online}) async {
+    await firebaseFirestore.collection('users').doc(user.uid).update({
+      'online': online,
+      'last_activated': DateTime.now().millisecondsSinceEpoch.toString()
+    });
+    emit(UserUpdatedActivatedState());
+  }
 }

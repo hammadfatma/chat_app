@@ -3,9 +3,11 @@ import 'package:chat_app/core/helpers/spacing.dart';
 import 'package:chat_app/core/routing/routes.dart';
 import 'package:chat_app/core/theming/colors.dart';
 import 'package:chat_app/core/theming/styles.dart';
+import 'package:chat_app/core/widgets/date_time.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
 import 'package:chat_app/features/chat/ui/widgets/circle_image.dart';
 import 'package:chat_app/features/chat/ui/widgets/say_hello.dart';
+import 'package:chat_app/features/chat/ui/widgets/show_date.dart';
 import 'package:chat_app/features/group/data/models/group_model.dart';
 import 'package:chat_app/features/group/logic/cubit/group_cubit.dart';
 import 'package:chat_app/features/group/ui/widgets/group_message_item.dart';
@@ -37,9 +39,7 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
             EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 12.h),
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            leading: circleImage(image: widget.chatGroup.image!),
+            leading: CircleImage(image: widget.chatGroup.image!),
             title: GestureDetector(
               onTap: () {
                 context.pushNamed(Routes.groupMembersScreen,
@@ -143,6 +143,23 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
                         child: ListView.separated(
                           reverse: true,
                           itemBuilder: (context, index) {
+                            String newDate = '';
+                            bool isSameDate = false;
+                            if ((index == 0 && messageItems.length == 1) ||
+                                index == messageItems.length - 1) {
+                              newDate = MyDateTime.dateAndTime(
+                                  messageItems[index].createdAt.toString());
+                            } else {
+                              final DateTime date = MyDateTime.dateFormat(
+                                  messageItems[index].createdAt.toString());
+                              final DateTime nextDate = MyDateTime.dateFormat(
+                                  messageItems[index + 1].createdAt.toString());
+                              isSameDate = date.isAtSameMomentAs(nextDate);
+                              newDate = isSameDate
+                                  ? ""
+                                  : MyDateTime.dateAndTime(
+                                      messageItems[index].createdAt.toString());
+                            }
                             return GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -184,11 +201,19 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
                                       : null;
                                 });
                               },
-                              child: GroupMessageItem(
-                                messageItem: messageItems[index],
-                                groupId: widget.chatGroup.id!,
-                                isSelected: selectedMessages
-                                    .contains(messageItems[index].id),
+                              child: Column(
+                                children: [
+                                  if (newDate != '')
+                                    Center(
+                                      child: showDate(newDate),
+                                    ),
+                                  GroupMessageItem(
+                                    messageItem: messageItems[index],
+                                    groupId: widget.chatGroup.id!,
+                                    isSelected: selectedMessages
+                                        .contains(messageItems[index].id),
+                                  ),
+                                ],
                               ),
                             );
                           },

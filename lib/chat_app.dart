@@ -20,6 +20,10 @@ class ChatApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: ColorsManager.ligtGreen),
           useMaterial3: true,
           scaffoldBackgroundColor: ColorsManager.black,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
           fontFamily: 'Roboto',
         ),
         initialRoute: initialRoute,

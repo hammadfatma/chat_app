@@ -8,7 +8,10 @@ import 'package:chat_app/features/home/chats_screen.dart';
 import 'package:chat_app/features/home/calls_screen.dart';
 import 'package:chat_app/features/home/status_screen.dart';
 import 'package:chat_app/features/home/widgets/floating_action.dart';
+import 'package:chat_app/features/user/logic/cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,9 +27,20 @@ class _HomeScreenState extends State<HomeScreen>
   late TabController _tabController;
   @override
   void initState() {
-    super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_handleTabIndex);
+    BlocProvider.of<UserCubit>(context).updateActivate(online: true);
+    SystemChannels.lifecycle.setMessageHandler((message) {
+      if (message.toString() == "AppLifecycleState.resumed") {
+        BlocProvider.of<UserCubit>(context).updateActivate(online: true);
+      } else if (message.toString() == "AppLifecycleState.paused" ||
+          message.toString() == "AppLifecycleState.inactive") {
+        BlocProvider.of<UserCubit>(context).updateActivate(online: false);
+      }
+      print("************$message**************");
+      return Future.value(message);
+    });
+    super.initState();
   }
 
   @override
@@ -90,8 +104,6 @@ class _HomeScreenState extends State<HomeScreen>
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
           title: Text(
             'WhatsApp',
             style: TextStyles.font20WhiteMedium

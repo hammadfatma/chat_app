@@ -1,4 +1,5 @@
 import 'package:chat_app/core/routing/routes.dart';
+import 'package:chat_app/core/widgets/photo_view.dart';
 import 'package:chat_app/features/auth/logic/phone_cubit/phone_auth_cubit.dart';
 import 'package:chat_app/features/auth/ui/login_screen.dart';
 import 'package:chat_app/features/auth/ui/otp_screen.dart';
@@ -35,7 +36,16 @@ class AppRouter {
         );
       case Routes.homeScreen:
         return MaterialPageRoute(
-          builder: (_) => const HomeScreen(),
+          builder: (_) => BlocProvider(
+            create: (context) => UserCubit(),
+            child: const HomeScreen(),
+          ),
+        );
+      case Routes.photoViewScreen:
+        return MaterialPageRoute(
+          builder: (_) => PhotoViewScreen(
+            image: argument as String,
+          ),
         );
       case Routes.loginScreen:
         return MaterialPageRoute(

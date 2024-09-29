@@ -1,11 +1,13 @@
 import 'package:chat_app/core/helpers/spacing.dart';
 import 'package:chat_app/core/theming/colors.dart';
 import 'package:chat_app/core/theming/styles.dart';
+import 'package:chat_app/core/widgets/date_time.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
 import 'package:chat_app/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:chat_app/features/chat/ui/widgets/circle_image.dart';
 import 'package:chat_app/features/chat/ui/widgets/message_item.dart';
 import 'package:chat_app/features/chat/ui/widgets/say_hello.dart';
+import 'package:chat_app/features/chat/ui/widgets/show_date.dart';
 import 'package:chat_app/features/user/data/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -37,9 +39,7 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
             EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 12.h),
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            leading: circleImage(image: widget.chatUser.image!),
+            leading: CircleImage(image: widget.chatUser.image!),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -47,8 +47,24 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                   widget.chatUser.name!,
                   style: TextStyles.font30WhiteBold.copyWith(fontSize: 16.sp),
                 ),
-                Text(widget.chatUser.lastActivated!,
-                    style: TextStyles.font12WhiteSemiBold),
+                StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(widget.chatUser.id)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(
+                        snapshot.data!.data()!['online']
+                            ? 'Online'
+                            : "Last seen ${MyDateTime.dateAndTime(widget.chatUser.lastActivated!)} at ${MyDateTime.timeDate(widget.chatUser.lastActivated!)}",
+                        style: TextStyles.font12WhiteSemiBold,
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
               ],
             ),
             actions: selectedMessages.isNotEmpty
@@ -122,6 +138,23 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                         child: ListView.separated(
                           reverse: true,
                           itemBuilder: (context, index) {
+                            String newDate = '';
+                            bool isSameDate = false;
+                            if ((index == 0 && messageItems.length == 1) ||
+                                index == messageItems.length - 1) {
+                              newDate = MyDateTime.dateAndTime(
+                                  messageItems[index].createdAt.toString());
+                            } else {
+                              final DateTime date = MyDateTime.dateFormat(
+                                  messageItems[index].createdAt.toString());
+                              final DateTime nextDate = MyDateTime.dateFormat(
+                                  messageItems[index + 1].createdAt.toString());
+                              isSameDate = date.isAtSameMomentAs(nextDate);
+                              newDate = isSameDate
+                                  ? ""
+                                  : MyDateTime.dateAndTime(
+                                      messageItems[index].createdAt.toString());
+                            }
                             return GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -163,11 +196,19 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                                       : null;
                                 });
                               },
-                              child: MessageItem(
-                                messageItem: messageItems[index],
-                                roomId: widget.roomId,
-                                isSelected: selectedMessages
-                                    .contains(messageItems[index].id),
+                              child: Column(
+                                children: [
+                                  if (newDate != '')
+                                    Center(
+                                      child: showDate(newDate),
+                                    ),
+                                  MessageItem(
+                                    messageItem: messageItems[index],
+                                    roomId: widget.roomId,
+                                    isSelected: selectedMessages
+                                        .contains(messageItems[index].id),
+                                  ),
+                                ],
                               ),
                             );
                           },
