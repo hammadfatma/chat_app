@@ -136,6 +136,9 @@ class ChatCubit extends Cubit<ChatState> {
       {required String roomId,
       required String msgId,
       required String editMessage}) async {
+    DocumentSnapshot documentSnapshot =
+        await firestore.collection('rooms').doc(roomId).get();
+    var lastMessageId = documentSnapshot.get('last_message_id');
     await firestore
         .collection('rooms')
         .doc(roomId)
@@ -144,6 +147,11 @@ class ChatCubit extends Cubit<ChatState> {
         .update({
       'msg': editMessage,
     });
+    if (lastMessageId == msgId) {
+      await firestore.collection('rooms').doc(roomId).update({
+        'last_message': editMessage,
+      });
+    }
     emit(MessageEditSuccessState());
   }
 

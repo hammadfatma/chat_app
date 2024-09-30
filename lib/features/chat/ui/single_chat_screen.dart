@@ -1,3 +1,4 @@
+import 'package:chat_app/core/helpers/extensions.dart';
 import 'package:chat_app/core/helpers/spacing.dart';
 import 'package:chat_app/core/theming/colors.dart';
 import 'package:chat_app/core/theming/styles.dart';
@@ -5,6 +6,7 @@ import 'package:chat_app/core/widgets/date_time.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
 import 'package:chat_app/features/chat/logic/cubit/chat_cubit.dart';
 import 'package:chat_app/features/chat/ui/widgets/circle_image.dart';
+import 'package:chat_app/features/chat/ui/widgets/input_field.dart';
 import 'package:chat_app/features/chat/ui/widgets/message_item.dart';
 import 'package:chat_app/features/chat/ui/widgets/say_hello.dart';
 import 'package:chat_app/features/chat/ui/widgets/show_date.dart';
@@ -28,9 +30,9 @@ class SingleChatScreen extends StatefulWidget {
 
 class _SingleChatScreenState extends State<SingleChatScreen> {
   TextEditingController messageController = TextEditingController();
-  bool messageWritten = false;
   List<String> selectedMessages = [];
   List<String> copiedMessages = [];
+
   @override
   Widget build(BuildContext bcontext) {
     return SafeArea(
@@ -218,158 +220,39 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                         ),
                       ),
                       verticalSpace(25),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: 50.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                color: ColorsManager.darkGray,
-                              ),
-                              child: TextField(
-                                controller: messageController,
-                                onChanged: (value) {
-                                  if (value != '') {
-                                    setState(() {
-                                      messageWritten = true;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      messageWritten = false;
-                                    });
-                                  }
-                                },
-                                style: TextStyles.font14BlackRegular
-                                    .copyWith(color: ColorsManager.white),
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                  hintText: 'Message',
-                                  hintStyle: TextStyles.font13LightGrayRegular,
-                                  prefixIcon: IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.mood,
-                                      size: 20,
-                                      color: ColorsManager.ligtGray,
-                                    ),
-                                  ),
-                                  suffixIcon: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.attach_file,
-                                          size: 20,
-                                          color: ColorsManager.ligtGray,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => AlertDialog(
-                                              title: const Text(
-                                                  'choose what you want'),
-                                              actions: [
-                                                ListTile(
-                                                  leading:
-                                                      const Icon(Icons.camera),
-                                                  title: const Text('Camera'),
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                    BlocProvider.of<ChatCubit>(
-                                                            bcontext)
-                                                        .sendImageToChat(
-                                                            context: context,
-                                                            imageSource:
-                                                                ImageSource
-                                                                    .camera,
-                                                            roomId:
-                                                                widget.roomId,
-                                                            uid: widget
-                                                                .chatUser.id!);
-                                                  },
-                                                ),
-                                                ListTile(
-                                                  leading:
-                                                      const Icon(Icons.image),
-                                                  title: const Text('Gallery'),
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                    BlocProvider.of<ChatCubit>(
-                                                            bcontext)
-                                                        .sendImageToChat(
-                                                            context: context,
-                                                            imageSource:
-                                                                ImageSource
-                                                                    .gallery,
-                                                            roomId:
-                                                                widget.roomId,
-                                                            uid: widget
-                                                                .chatUser.id!);
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                        icon: const Icon(
-                                          Icons.photo_camera,
-                                          size: 20,
-                                          color: ColorsManager.ligtGray,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          horizontalSpace(10),
-                          ClipOval(
-                            child: Container(
-                              height: 50.h,
-                              width: 50.w,
-                              color: ColorsManager.ligtGreen,
-                              child: messageWritten
-                                  ? IconButton(
-                                      onPressed: () {
-                                        if (messageController.text.isNotEmpty) {
-                                          BlocProvider.of<ChatCubit>(context)
-                                              .sendMessage(
-                                            uid: widget.chatUser.id!,
-                                            msg: messageController.text,
-                                            roomId: widget.roomId,
-                                          )
-                                              .then(
-                                            (value) {
-                                              messageController.text = '';
-                                            },
-                                          );
-                                        }
-                                      },
-                                      icon: const Icon(
-                                        Icons.send,
-                                        size: 22,
-                                        color: ColorsManager.white,
-                                      ),
-                                    )
-                                  : IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                        Icons.mic,
-                                        size: 22,
-                                        color: ColorsManager.white,
-                                      ),
-                                    ),
-                            ),
-                          ),
-                        ],
+                      InputField(
+                        controller: messageController,
+                        onTapCamera: () {
+                          context.pop();
+                          BlocProvider.of<ChatCubit>(bcontext).sendImageToChat(
+                              context: context,
+                              imageSource: ImageSource.camera,
+                              roomId: widget.roomId,
+                              uid: widget.chatUser.id!);
+                        },
+                        onTapGallary: () {
+                          context.pop();
+                          BlocProvider.of<ChatCubit>(bcontext).sendImageToChat(
+                              context: context,
+                              imageSource: ImageSource.gallery,
+                              roomId: widget.roomId,
+                              uid: widget.chatUser.id!);
+                        },
+                        onPressedSend: () {
+                          if (messageController.text.isNotEmpty) {
+                            BlocProvider.of<ChatCubit>(context)
+                                .sendMessage(
+                              uid: widget.chatUser.id!,
+                              msg: messageController.text,
+                              roomId: widget.roomId,
+                            )
+                                .then(
+                              (value) {
+                                messageController.text = '';
+                              },
+                            );
+                          }
+                        },
                       ),
                     ],
                   );

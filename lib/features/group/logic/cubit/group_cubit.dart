@@ -132,6 +132,9 @@ class GroupCubit extends Cubit<GroupState> {
       {required String gropId,
       required String msgId,
       required String editMessage}) async {
+    DocumentSnapshot documentSnapshot =
+        await firestore.collection('groups').doc(gropId).get();
+    var lastMessageId = documentSnapshot.get('last_message_id');
     await firestore
         .collection('groups')
         .doc(gropId)
@@ -140,6 +143,11 @@ class GroupCubit extends Cubit<GroupState> {
         .update({
       'msg': editMessage,
     });
+    if (lastMessageId == msgId) {
+      await firestore.collection('groups').doc(gropId).update({
+        'last_message': editMessage,
+      });
+    }
     emit(MessageEditSuccessState());
   }
 
