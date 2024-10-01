@@ -10,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
 part 'chat_state.dart';
@@ -60,12 +61,19 @@ class ChatCubit extends Cubit<ChatState> {
       required String roomId,
       required BuildContext context,
       required String uid}) async {
-    // emit(ImageSendToChatLoadingState((context) {
-    //   showProgressIndicator(context);
-    // }));
+    // Request camera permission
+    var status = await Permission.camera.status;
+    if (!status.isGranted) {
+      status = await Permission.camera.request();
+      if (!status.isGranted) {
+        emit(ImageSendToChatFailureState());
+        showToast(text: 'Camera permission denied', state: ToastStates.error);
+        return;
+      }
+    }
+    emit(ImageSendToChatLoadingState());
     var file = await ImagePicker().pickImage(source: imageSource);
     if (file == null) return;
-    //String ext = file.path.split('.').last;
     String fileName = DateTime.now().microsecondsSinceEpoch.toString();
     Reference referenceRoot = FirebaseStorage.instance.ref();
     Reference referenceDireImages = referenceRoot.child('chat/$roomId');
@@ -83,6 +91,45 @@ class ChatCubit extends Cubit<ChatState> {
     } catch (errorMsg) {
       showToast(text: 'No image selected', state: ToastStates.error);
       emit(ImageSendToChatFailureState());
+    }
+  }
+
+  String? videoUrl;
+  Future<void> sendVideoToChat(
+      {required ImageSource imageSource,
+      required String roomId,
+      required BuildContext context,
+      required String uid}) async {
+    // Request camera permission
+    var status = await Permission.camera.status;
+    if (!status.isGranted) {
+      status = await Permission.camera.request();
+      if (!status.isGranted) {
+        showToast(text: 'Camera permission denied', state: ToastStates.error);
+        emit(VideoSendToChatFailureState('Camera permission denied'));
+        return;
+      }
+    }
+    emit(VideoSendToChatLoadingState());
+    var file = await ImagePicker().pickVideo(source: imageSource);
+    if (file == null) return;
+    String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDireImages = referenceRoot.child('chat/$roomId');
+    Reference referenceImageToUpload = referenceDireImages.child(fileName);
+    try {
+      await referenceImageToUpload.putFile(
+          File(file.path), SettableMetadata(contentType: 'video/mp4'));
+      videoUrl = await referenceImageToUpload.getDownloadURL();
+      sendMessage(
+          uid: uid,
+          msg: videoUrl!,
+          roomId: roomId,
+          type: MessageType.video.name);
+      emit(VideoSendToChatSuccessState());
+    } catch (errorMsg) {
+      showToast(text: 'No video selected', state: ToastStates.error);
+      emit(VideoSendToChatFailureState('No video selected'));
     }
   }
 

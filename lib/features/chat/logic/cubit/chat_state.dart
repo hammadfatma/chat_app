@@ -17,14 +17,20 @@ class MessageSendSuccessState extends ChatState {}
 
 class MessageSendFailureState extends ChatState {}
 
-// class ImageSendToChatLoadingState extends ChatState {
-//   final void Function(BuildContext) showProgressIndicator;
-//   ImageSendToChatLoadingState(this.showProgressIndicator);
-// }
+class ImageSendToChatLoadingState extends ChatState {}
 
 class ImageSendToChatSuccessState extends ChatState {}
 
 class ImageSendToChatFailureState extends ChatState {}
+
+class VideoSendToChatLoadingState extends ChatState {}
+
+class VideoSendToChatSuccessState extends ChatState {}
+
+class VideoSendToChatFailureState extends ChatState {
+  final String error;
+  VideoSendToChatFailureState(this.error);
+}
 
 class MessageReadSuccessState extends ChatState {}
 

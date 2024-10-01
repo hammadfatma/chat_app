@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 part 'user_state.dart';
 
@@ -15,6 +16,16 @@ class UserCubit extends Cubit<UserState> {
   UserCubit() : super(UserInitial());
   String? imageUrl;
   Future<void> getProfileImage(ImageSource imageSource) async {
+    // Request camera permission
+    var status = await Permission.camera.status;
+    if (!status.isGranted) {
+      status = await Permission.camera.request();
+      if (!status.isGranted) {
+        showToast(text: 'Camera permission denied', state: ToastStates.error);
+        emit(ProfileImagePickedErrorState());
+        return;
+      }
+    }
     var file = await ImagePicker().pickImage(source: imageSource);
     if (file == null) return;
     String fileName = DateTime.now().microsecondsSinceEpoch.toString();

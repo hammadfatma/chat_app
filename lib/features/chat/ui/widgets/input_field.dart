@@ -12,13 +12,17 @@ class InputField extends StatefulWidget {
   InputField({
     super.key,
     this.controller,
-    this.onTapCamera,
-    this.onTapGallary,
+    this.onTapImageCamera,
+    this.onTapImageGallary,
     this.onPressedSend,
+    this.onTapVideoCamera,
+    this.onTapVideoGallary,
   });
   final TextEditingController? controller;
-  final void Function()? onTapCamera;
-  final void Function()? onTapGallary;
+  final void Function()? onTapImageCamera;
+  final void Function()? onTapImageGallary;
+  final void Function()? onTapVideoCamera;
+  final void Function()? onTapVideoGallary;
   final void Function()? onPressedSend;
   final focusNode = FocusNode();
   @override
@@ -141,13 +145,24 @@ class _InputFieldState extends State<InputField> {
                                   actions: [
                                     ListTile(
                                       leading: const Icon(Icons.camera),
-                                      title: const Text('Camera'),
-                                      onTap: widget.onTapCamera,
+                                      title: const Text('Image with Camera'),
+                                      onTap: widget.onTapImageCamera,
                                     ),
                                     ListTile(
                                       leading: const Icon(Icons.image),
-                                      title: const Text('Gallery'),
-                                      onTap: widget.onTapGallary,
+                                      title: const Text('Image from Gallery'),
+                                      onTap: widget.onTapImageGallary,
+                                    ),
+                                    ListTile(
+                                      leading:
+                                          const Icon(Icons.video_camera_front),
+                                      title: const Text('video with Camera'),
+                                      onTap: widget.onTapVideoCamera,
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(Icons.video_file),
+                                      title: const Text('video from Gallery'),
+                                      onTap: widget.onTapVideoGallary,
                                     ),
                                   ],
                                 ),

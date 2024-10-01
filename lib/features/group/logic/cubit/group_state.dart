@@ -23,9 +23,17 @@ class MessageEditSuccessState extends GroupState {}
 
 class MessagedeletedSuccessState extends GroupState {}
 
+class GroupImageSendLoadingState extends GroupState {}
+
 class GroupImageSendSuccessState extends GroupState {}
 
 class GroupImageSendFailureState extends GroupState {}
+
+class GroupVideoSendLoadingState extends GroupState {}
+
+class GroupVideoSendSuccessState extends GroupState {}
+
+class GroupVideoSendFailureState extends GroupState {}
 
 class GroupImagePickedSuccessState extends GroupState {}
 

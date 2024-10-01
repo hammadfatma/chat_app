@@ -225,7 +225,7 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
                       verticalSpace(25),
                       InputField(
                         controller: messageController,
-                        onTapCamera: () {
+                        onTapImageCamera: () {
                           context.pop();
                           BlocProvider.of<GroupCubit>(bcontext)
                               .sendImageToGroup(
@@ -233,10 +233,26 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
                                   gropId: widget.chatGroup.id!,
                                   context: context);
                         },
-                        onTapGallary: () {
+                        onTapImageGallary: () {
                           context.pop();
                           BlocProvider.of<GroupCubit>(bcontext)
                               .sendImageToGroup(
+                                  imageSource: ImageSource.gallery,
+                                  gropId: widget.chatGroup.id!,
+                                  context: context);
+                        },
+                        onTapVideoCamera: () {
+                          context.pop();
+                          BlocProvider.of<GroupCubit>(bcontext)
+                              .sendVideoToGroup(
+                                  imageSource: ImageSource.camera,
+                                  gropId: widget.chatGroup.id!,
+                                  context: context);
+                        },
+                        onTapVideoGallary: () {
+                          context.pop();
+                          BlocProvider.of<GroupCubit>(bcontext)
+                              .sendVideoToGroup(
                                   imageSource: ImageSource.gallery,
                                   gropId: widget.chatGroup.id!,
                                   context: context);

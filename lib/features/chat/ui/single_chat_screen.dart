@@ -222,7 +222,7 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                       verticalSpace(25),
                       InputField(
                         controller: messageController,
-                        onTapCamera: () {
+                        onTapImageCamera: () {
                           context.pop();
                           BlocProvider.of<ChatCubit>(bcontext).sendImageToChat(
                               context: context,
@@ -230,10 +230,26 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                               roomId: widget.roomId,
                               uid: widget.chatUser.id!);
                         },
-                        onTapGallary: () {
+                        onTapImageGallary: () {
                           context.pop();
                           BlocProvider.of<ChatCubit>(bcontext).sendImageToChat(
                               context: context,
+                              imageSource: ImageSource.gallery,
+                              roomId: widget.roomId,
+                              uid: widget.chatUser.id!);
+                        },
+                        onTapVideoCamera: () {
+                          context.pop();
+                          BlocProvider.of<ChatCubit>(bcontext).sendVideoToChat(
+                              context: bcontext,
+                              imageSource: ImageSource.camera,
+                              roomId: widget.roomId,
+                              uid: widget.chatUser.id!);
+                        },
+                        onTapVideoGallary: () {
+                          context.pop();
+                          BlocProvider.of<ChatCubit>(bcontext).sendVideoToChat(
+                              context: bcontext,
                               imageSource: ImageSource.gallery,
                               roomId: widget.roomId,
                               uid: widget.chatUser.id!);

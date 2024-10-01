@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:chat_app/core/helpers/message_type.dart';
 import 'package:chat_app/core/widgets/show_toast.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
 import 'package:chat_app/features/group/data/models/group_model.dart';
@@ -8,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
 part 'group_state.dart';
@@ -50,9 +52,18 @@ class GroupCubit extends Cubit<GroupState> {
     required String path,
     required BuildContext context,
   }) async {
+    // Request camera permission
+    var status = await Permission.camera.status;
+    if (!status.isGranted) {
+      status = await Permission.camera.request();
+      if (!status.isGranted) {
+        showToast(text: 'Camera permission denied', state: ToastStates.error);
+        emit(GroupImagePickedErrorState());
+        return;
+      }
+    }
     var file = await ImagePicker().pickImage(source: imageSource);
     if (file == null) return;
-    //String ext = file.path.split('.').last;
     String fileName = DateTime.now().microsecondsSinceEpoch.toString();
     Reference referenceRoot = FirebaseStorage.instance.ref();
     Reference referenceDireImages = referenceRoot.child('$path/');
@@ -80,6 +91,42 @@ class GroupCubit extends Cubit<GroupState> {
       emit(GroupImageSendSuccessState());
     } catch (e) {
       emit(GroupImageSendFailureState());
+    }
+  }
+
+  String? videoUrl;
+  Future<void> sendVideoToGroup({
+    required ImageSource imageSource,
+    required String gropId,
+    required BuildContext context,
+  }) async {
+    // Request camera permission
+    var status = await Permission.camera.status;
+    if (!status.isGranted) {
+      status = await Permission.camera.request();
+      if (!status.isGranted) {
+        showToast(text: 'Camera permission denied', state: ToastStates.error);
+        emit(GroupVideoSendFailureState());
+        return;
+      }
+    }
+    emit(GroupVideoSendLoadingState());
+    var file = await ImagePicker().pickVideo(source: imageSource);
+    if (file == null) return;
+    String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDireImages = referenceRoot.child('group/$gropId');
+    Reference referenceImageToUpload = referenceDireImages.child(fileName);
+    try {
+      await referenceImageToUpload.putFile(
+          File(file.path), SettableMetadata(contentType: 'video/mp4'));
+      videoUrl = await referenceImageToUpload.getDownloadURL();
+      sendGroupMessage(
+          msg: videoUrl!, gropId: gropId, type: MessageType.video.name);
+      emit(GroupVideoSendSuccessState());
+    } catch (errorMsg) {
+      showToast(text: 'No video selected', state: ToastStates.error);
+      emit(GroupVideoSendFailureState());
     }
   }
 
