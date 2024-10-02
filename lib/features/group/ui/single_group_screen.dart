@@ -257,6 +257,11 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
                                   gropId: widget.chatGroup.id!,
                                   context: context);
                         },
+                        onTapGif: () {
+                          context.pop();
+                          BlocProvider.of<GroupCubit>(bcontext).sendGifToGroup(
+                              gropId: widget.chatGroup.id!, context: context);
+                        },
                         onPressedSend: () {
                           if (messageController.text.isNotEmpty) {
                             BlocProvider.of<GroupCubit>(context)

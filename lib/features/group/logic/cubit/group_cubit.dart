@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:chat_app/core/helpers/api_keys.dart';
+import 'package:http/http.dart' as http;
 import 'package:chat_app/core/helpers/message_type.dart';
 import 'package:chat_app/core/widgets/show_toast.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
@@ -8,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giphy_picker/giphy_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
@@ -127,6 +130,34 @@ class GroupCubit extends Cubit<GroupState> {
     } catch (errorMsg) {
       showToast(text: 'No video selected', state: ToastStates.error);
       emit(GroupVideoSendFailureState());
+    }
+  }
+
+  String? gifUrl;
+  Future<void> sendGifToGroup({
+    required String gropId,
+    required BuildContext context,
+  }) async {
+    emit(GroupGifSendLoadingState());
+    var file = await GiphyPicker.pickGif(
+        context: context, apiKey: ApiKeys.giphyApiKey);
+    if (file == null || file.images.original?.url == null) return;
+    String gifUrlFromGiphy = file.images.original!.url!;
+    String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDireImages = referenceRoot.child('group/$gropId');
+    Reference referenceImageToUpload = referenceDireImages.child(fileName);
+    var response = await http.get(Uri.parse(gifUrlFromGiphy));
+    try {
+      await referenceImageToUpload.putData(
+          response.bodyBytes, SettableMetadata(contentType: 'image/gif'));
+      gifUrl = await referenceImageToUpload.getDownloadURL();
+      sendGroupMessage(
+          msg: gifUrl!, gropId: gropId, type: MessageType.gif.name);
+      emit(GroupGifSendSuccessState());
+    } catch (errorMsg) {
+      showToast(text: 'No gif selected', state: ToastStates.error);
+      emit(GroupGifSendFailureState());
     }
   }
 

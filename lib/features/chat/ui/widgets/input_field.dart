@@ -17,12 +17,14 @@ class InputField extends StatefulWidget {
     this.onPressedSend,
     this.onTapVideoCamera,
     this.onTapVideoGallary,
+    this.onTapGif,
   });
   final TextEditingController? controller;
   final void Function()? onTapImageCamera;
   final void Function()? onTapImageGallary;
   final void Function()? onTapVideoCamera;
   final void Function()? onTapVideoGallary;
+  final void Function()? onTapGif;
   final void Function()? onPressedSend;
   final focusNode = FocusNode();
   @override
@@ -163,6 +165,11 @@ class _InputFieldState extends State<InputField> {
                                       leading: const Icon(Icons.video_file),
                                       title: const Text('video from Gallery'),
                                       onTap: widget.onTapVideoGallary,
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(Icons.gif_box),
+                                      title: const Text('Gif'),
+                                      onTap: widget.onTapGif,
                                     ),
                                   ],
                                 ),

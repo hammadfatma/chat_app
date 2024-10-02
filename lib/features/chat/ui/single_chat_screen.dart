@@ -254,6 +254,13 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                               roomId: widget.roomId,
                               uid: widget.chatUser.id!);
                         },
+                        onTapGif: () {
+                          context.pop();
+                          BlocProvider.of<ChatCubit>(bcontext).sendGifToChat(
+                              context: bcontext,
+                              roomId: widget.roomId,
+                              uid: widget.chatUser.id!);
+                        },
                         onPressedSend: () {
                           if (messageController.text.isNotEmpty) {
                             BlocProvider.of<ChatCubit>(context)

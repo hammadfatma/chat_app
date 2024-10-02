@@ -27,10 +27,13 @@ class VideoSendToChatLoadingState extends ChatState {}
 
 class VideoSendToChatSuccessState extends ChatState {}
 
-class VideoSendToChatFailureState extends ChatState {
-  final String error;
-  VideoSendToChatFailureState(this.error);
-}
+class VideoSendToChatFailureState extends ChatState {}
+
+class GifSendToChatLoadingState extends ChatState {}
+
+class GifSendToChatSuccessState extends ChatState {}
+
+class GifSendToChatFailureState extends ChatState {}
 
 class MessageReadSuccessState extends ChatState {}
 

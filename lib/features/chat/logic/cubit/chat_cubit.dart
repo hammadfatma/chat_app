@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:chat_app/core/helpers/api_keys.dart';
+import 'package:http/http.dart' as http;
 import 'package:chat_app/core/helpers/message_type.dart';
 import 'package:chat_app/core/widgets/show_toast.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
@@ -9,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:giphy_picker/giphy_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
@@ -106,7 +108,7 @@ class ChatCubit extends Cubit<ChatState> {
       status = await Permission.camera.request();
       if (!status.isGranted) {
         showToast(text: 'Camera permission denied', state: ToastStates.error);
-        emit(VideoSendToChatFailureState('Camera permission denied'));
+        emit(VideoSendToChatFailureState());
         return;
       }
     }
@@ -129,7 +131,35 @@ class ChatCubit extends Cubit<ChatState> {
       emit(VideoSendToChatSuccessState());
     } catch (errorMsg) {
       showToast(text: 'No video selected', state: ToastStates.error);
-      emit(VideoSendToChatFailureState('No video selected'));
+      emit(VideoSendToChatFailureState());
+    }
+  }
+
+  String? gifUrl;
+  Future<void> sendGifToChat(
+      {required String roomId,
+      required BuildContext context,
+      required String uid}) async {
+    emit(GifSendToChatLoadingState());
+    var file = await GiphyPicker.pickGif(
+        context: context, apiKey: ApiKeys.giphyApiKey);
+    if (file == null || file.images.original?.url == null) return;
+    String gifUrlFromGiphy = file.images.original!.url!;
+    String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDireImages = referenceRoot.child('chat/$roomId');
+    Reference referenceImageToUpload = referenceDireImages.child(fileName);
+    var response = await http.get(Uri.parse(gifUrlFromGiphy));
+    try {
+      await referenceImageToUpload.putData(
+          response.bodyBytes, SettableMetadata(contentType: 'image/gif'));
+      gifUrl = await referenceImageToUpload.getDownloadURL();
+      sendMessage(
+          uid: uid, msg: gifUrl!, roomId: roomId, type: MessageType.gif.name);
+      emit(GifSendToChatSuccessState());
+    } catch (errorMsg) {
+      showToast(text: 'No gif selected', state: ToastStates.error);
+      emit(GifSendToChatFailureState());
     }
   }
 

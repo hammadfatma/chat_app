@@ -6,6 +6,7 @@ import 'package:chat_app/core/theming/styles.dart';
 import 'package:chat_app/core/widgets/date_time.dart';
 import 'package:chat_app/core/widgets/progress_indicator.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
+import 'package:chat_app/features/chat/ui/widgets/giphy_picker.dart';
 import 'package:chat_app/features/chat/ui/widgets/video_player.dart';
 import 'package:chat_app/features/group/logic/cubit/group_cubit.dart';
 import 'package:chat_app/features/user/ui/widgets/show_bottom_sheet.dart';
@@ -80,6 +81,8 @@ class _GroupMessageItemState extends State<GroupMessageItem> {
         );
       case 'video':
         return VideoShowWidget(videoUrl: widget.messageItem.msg!);
+      case 'gif':
+        return GifPickWidget(gifUrl: widget.messageItem.msg!);
       case 'text':
         return Text(
           widget.messageItem.msg!,
