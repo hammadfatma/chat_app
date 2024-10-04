@@ -35,6 +35,12 @@ class GifSendToChatSuccessState extends ChatState {}
 
 class GifSendToChatFailureState extends ChatState {}
 
+class AudioSendToChatLoadingState extends ChatState {}
+
+class AudioSendToChatSuccessState extends ChatState {}
+
+class AudioSendToChatFailureState extends ChatState {}
+
 class MessageReadSuccessState extends ChatState {}
 
 class MessageEditSuccessState extends ChatState {}

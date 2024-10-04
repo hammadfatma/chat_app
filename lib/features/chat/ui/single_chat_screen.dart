@@ -5,6 +5,7 @@ import 'package:chat_app/core/theming/styles.dart';
 import 'package:chat_app/core/widgets/date_time.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
 import 'package:chat_app/features/chat/logic/cubit/chat_cubit.dart';
+import 'package:chat_app/features/chat/ui/widgets/audio_record.dart';
 import 'package:chat_app/features/chat/ui/widgets/circle_image.dart';
 import 'package:chat_app/features/chat/ui/widgets/input_field.dart';
 import 'package:chat_app/features/chat/ui/widgets/message_item.dart';
@@ -260,6 +261,18 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
                               context: bcontext,
                               roomId: widget.roomId,
                               uid: widget.chatUser.id!);
+                        },
+                        onPressedMic: () {
+                          showBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return AudioRecordWidget(
+                                postionId: widget.roomId,
+                                userId: widget.chatUser.id,
+                                bcontext: bcontext,
+                              );
+                            },
+                          );
                         },
                         onPressedSend: () {
                           if (messageController.text.isNotEmpty) {

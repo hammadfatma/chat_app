@@ -7,6 +7,7 @@ import 'package:chat_app/core/widgets/date_time.dart';
 import 'package:chat_app/core/widgets/progress_indicator.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
 import 'package:chat_app/features/chat/logic/cubit/chat_cubit.dart';
+import 'package:chat_app/features/chat/ui/widgets/audio_play.dart';
 import 'package:chat_app/features/chat/ui/widgets/giphy_picker.dart';
 import 'package:chat_app/features/chat/ui/widgets/video_player.dart';
 import 'package:chat_app/features/user/ui/widgets/show_bottom_sheet.dart';
@@ -81,6 +82,8 @@ class _MessageItemState extends State<MessageItem> {
         );
       case 'video':
         return VideoShowWidget(videoUrl: widget.messageItem.msg!);
+      case 'audio':
+        return AudioPlayWidget(audioUrl: widget.messageItem.msg!);
       case 'gif':
         return GifPickWidget(gifUrl: widget.messageItem.msg!);
       case 'text':

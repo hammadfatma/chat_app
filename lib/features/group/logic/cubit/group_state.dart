@@ -41,6 +41,12 @@ class GroupGifSendSuccessState extends GroupState {}
 
 class GroupGifSendFailureState extends GroupState {}
 
+class GroupAudioSendLoadingState extends GroupState {}
+
+class GroupAudioSendSuccessState extends GroupState {}
+
+class GroupAudioSendFailureState extends GroupState {}
+
 class GroupImagePickedSuccessState extends GroupState {}
 
 class GroupImagePickedErrorState extends GroupState {}

@@ -161,6 +161,29 @@ class GroupCubit extends Cubit<GroupState> {
     }
   }
 
+  String? audioUrl;
+  Future<void> sendAudioToGroup({
+    required String gropId,
+    required String path,
+  }) async {
+    emit(GroupAudioSendLoadingState());
+    String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDireImages = referenceRoot.child('group/$gropId');
+    Reference referenceImageToUpload = referenceDireImages.child(fileName);
+    try {
+      await referenceImageToUpload.putFile(
+          File(path), SettableMetadata(contentType: 'audio/mp4'));
+      audioUrl = await referenceImageToUpload.getDownloadURL();
+      sendGroupMessage(
+          msg: audioUrl!, gropId: gropId, type: MessageType.audio.name);
+      emit(GroupAudioSendSuccessState());
+    } catch (errorMsg) {
+      showToast(text: 'No audio selected', state: ToastStates.error);
+      emit(GroupAudioSendFailureState());
+    }
+  }
+
   Future<void> sendGroupMessage({
     String? type,
     required String msg,

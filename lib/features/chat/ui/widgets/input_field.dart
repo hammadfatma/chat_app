@@ -18,6 +18,7 @@ class InputField extends StatefulWidget {
     this.onTapVideoCamera,
     this.onTapVideoGallary,
     this.onTapGif,
+    this.onPressedMic,
   });
   final TextEditingController? controller;
   final void Function()? onTapImageCamera;
@@ -26,6 +27,7 @@ class InputField extends StatefulWidget {
   final void Function()? onTapVideoGallary;
   final void Function()? onTapGif;
   final void Function()? onPressedSend;
+  final void Function()? onPressedMic;
   final focusNode = FocusNode();
   @override
   State<InputField> createState() => _InputFieldState();
@@ -203,7 +205,7 @@ class _InputFieldState extends State<InputField> {
                           ),
                         )
                       : IconButton(
-                          onPressed: () {},
+                          onPressed: widget.onPressedMic,
                           icon: const Icon(
                             Icons.mic,
                             size: 22,

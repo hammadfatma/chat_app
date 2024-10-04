@@ -5,6 +5,7 @@ import 'package:chat_app/core/theming/colors.dart';
 import 'package:chat_app/core/theming/styles.dart';
 import 'package:chat_app/core/widgets/date_time.dart';
 import 'package:chat_app/features/chat/data/models/message_model.dart';
+import 'package:chat_app/features/chat/ui/widgets/audio_record.dart';
 import 'package:chat_app/features/chat/ui/widgets/circle_image.dart';
 import 'package:chat_app/features/chat/ui/widgets/input_field.dart';
 import 'package:chat_app/features/chat/ui/widgets/say_hello.dart';
@@ -261,6 +262,17 @@ class _SingleGroupScreenState extends State<SingleGroupScreen> {
                           context.pop();
                           BlocProvider.of<GroupCubit>(bcontext).sendGifToGroup(
                               gropId: widget.chatGroup.id!, context: context);
+                        },
+                        onPressedMic: () {
+                          showBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return AudioRecordWidget(
+                                postionId: widget.chatGroup.id!,
+                                bcontext: bcontext,
+                              );
+                            },
+                          );
                         },
                         onPressedSend: () {
                           if (messageController.text.isNotEmpty) {

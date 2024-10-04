@@ -163,6 +163,32 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  String? audioUrl;
+  Future<void> sendAudioToChat(
+      {required String roomId,
+      required String path,
+      required String uid}) async {
+    emit(AudioSendToChatLoadingState());
+    String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDireImages = referenceRoot.child('chat/$roomId');
+    Reference referenceImageToUpload = referenceDireImages.child(fileName);
+    try {
+      await referenceImageToUpload.putFile(
+          File(path), SettableMetadata(contentType: 'audio/mp4'));
+      audioUrl = await referenceImageToUpload.getDownloadURL();
+      sendMessage(
+          uid: uid,
+          msg: audioUrl!,
+          roomId: roomId,
+          type: MessageType.audio.name);
+      emit(AudioSendToChatSuccessState());
+    } catch (errorMsg) {
+      showToast(text: 'No audio selected', state: ToastStates.error);
+      emit(AudioSendToChatFailureState());
+    }
+  }
+
   Future<void> sendMessage({
     String? type,
     required String uid,
